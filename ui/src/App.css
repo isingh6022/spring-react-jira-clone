@@ -1,0 +1,247 @@
+/* ---------- Layout ---------- */
+
+header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.75rem 1.5rem;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+header h1 {
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+header h1 a {
+  color: var(--text);
+}
+
+header nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+}
+
+header nav a.active {
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+main {
+  max-width: 1200px;
+  margin: 1.5rem auto;
+  padding: 0 1.5rem;
+}
+
+main > section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+}
+
+footer {
+  max-width: 1200px;
+  margin: 0 auto 1.5rem;
+  padding: 0 1.5rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+footer pre {
+  margin: 0;
+}
+
+/* ---------- Forms ---------- */
+
+form {
+  margin-bottom: 1rem;
+}
+
+/* Filter bar on the task list */
+main > section > form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+form p {
+  margin: 0 0 0.9rem;
+}
+
+form p label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  max-width: 32rem;
+}
+
+form p label:has(input[type="checkbox"]) {
+  flex-direction: row;
+  align-items: center;
+}
+
+/* ---------- Tables ---------- */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Wide tables scroll inside their card instead of the page. */
+main > section {
+  overflow-x: auto;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+th {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--muted);
+}
+
+tbody tr:hover {
+  background: var(--bg);
+}
+
+tr[data-priority="HIGH"] td:nth-child(3) {
+  color: #b42318;
+  font-weight: 600;
+}
+
+/* ---------- State badges ---------- */
+
+span[data-state] {
+  display: inline-block;
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+  background: #eef0f3;
+  color: #424a53;
+}
+
+span[data-state="ROUTING"] {
+  background: #e0ecff;
+  color: #1d4ed8;
+}
+
+span[data-state="ASSIGNED"],
+span[data-state="ACCEPTED"],
+span[data-state="IN_PROGRESS"] {
+  background: #fff4d6;
+  color: #8a5a00;
+}
+
+span[data-state="DONE"] {
+  background: #dcf5e3;
+  color: #1a7f37;
+}
+
+span[data-state="NO_MATCH"],
+span[data-state="DECLINED"],
+span[data-state="FAILED"] {
+  background: #fde2e1;
+  color: #b42318;
+}
+
+span[data-state="CANCELLED"] {
+  background: #eef0f3;
+  color: #656d76;
+}
+
+/* ---------- Task detail ---------- */
+
+dl {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.4rem 1.5rem;
+  margin: 1rem 0;
+}
+
+dt {
+  color: var(--muted);
+}
+
+dd {
+  margin: 0;
+}
+
+/* History timeline */
+ol {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0 1rem;
+  border-left: 2px solid var(--border);
+}
+
+ol li {
+  position: relative;
+  padding: 0.35rem 0 0.35rem 0.75rem;
+}
+
+ol li::before {
+  content: "";
+  position: absolute;
+  left: -1.4rem;
+  top: 0.8rem;
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+ol li time {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin-right: 0.25rem;
+}
+
+section > div > p button {
+  margin-right: 0.5rem;
+}
+
+p[role="alert"] {
+  color: #b42318;
+}
+
+/* ---------- Small screens ---------- */
+
+@media (max-width: 640px) {
+  header,
+  main,
+  footer {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  main > section {
+    padding: 1rem;
+  }
+
+  dl {
+    grid-template-columns: 1fr;
+  }
+
+  dd {
+    margin-bottom: 0.5rem;
+  }
+}
