@@ -1,13 +1,18 @@
-import { useDemoMode } from "../hooks/useDemoMode";
-import { hrefWith } from "../utils/url";
+import { useDemoMode, useSetDemoMode } from "../hooks/useDemoMode";
 
 function DemoModeToggle() {
   const demoMode = useDemoMode();
+  const setDemoMode = useSetDemoMode();
 
   return (
-    <a href={hrefWith({ demo: demoMode ? null : "1" })}>
-      Demo mode: {demoMode ? "on" : "off"}
-    </a>
+    <label>
+      <input
+        type="checkbox"
+        checked={demoMode}
+        onChange={(e) => setDemoMode(e.target.checked)}
+      />{" "}
+      Demo mode
+    </label>
   );
 }
 

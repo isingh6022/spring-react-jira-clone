@@ -1,29 +1,31 @@
+import { Route, Routes } from "react-router";
 import "./App.css";
 import ContributorsPanel from "./components/ContributorsPanel";
-import CreateTaskDialog from "./components/CreateTaskDialog";
+import CreateTaskPage from "./components/CreateTaskPage";
+import DemoModeProvider from "./components/DemoModeProvider";
 import Header from "./components/Header";
 import MockData from "./components/MockData";
+import NotFoundPage from "./components/NotFoundPage";
 import TaskDetailPage from "./components/TaskDetailPage";
 import TaskListPage from "./components/TaskListPage";
-import { useUrlParams } from "./hooks/useUrlParams";
 
 function App() {
-  const params = useUrlParams();
-  const taskId = Number(params.get("task"));
-
   return (
-    <div>
+    <DemoModeProvider>
       <Header />
-      {params.get("new") === "1" && <CreateTaskDialog />}
       <main>
-        <TaskListPage />
-        {taskId > 0 && <TaskDetailPage id={taskId} />}
-        <ContributorsPanel />
+        <Routes>
+          <Route path="/" element={<TaskListPage />} />
+          <Route path="/tasks/new" element={<CreateTaskPage />} />
+          <Route path="/tasks/:id" element={<TaskDetailPage />} />
+          <Route path="/contributors" element={<ContributorsPanel />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
       </main>
       <footer>
         <MockData />
       </footer>
-    </div>
+    </DemoModeProvider>
   );
 }
 

@@ -1,6 +1,6 @@
+import { Link } from "react-router";
 import type { TaskFilters as Filters } from "../api/tasks";
 import { useContributors } from "../hooks/useContributors";
-import { useDemoMode } from "../hooks/useDemoMode";
 import { useExpertiseAreas } from "../hooks/useExpertiseAreas";
 import {
   PRIORITY_LABELS,
@@ -14,12 +14,9 @@ import ContributorPicker from "./ContributorPicker";
 function TaskFilters({ filters }: { filters: Filters }) {
   const { data: contributors } = useContributors();
   const { data: expertiseAreas } = useExpertiseAreas();
-  const demoMode = useDemoMode();
 
   return (
     <form method="get">
-      {demoMode && <input type="hidden" name="demo" value="1" />}
-
       <label>
         State{" "}
         <select name="state" defaultValue={filters.state ?? ""}>
@@ -67,7 +64,7 @@ function TaskFilters({ filters }: { filters: Filters }) {
       </label>{" "}
 
       <button type="submit">Apply</button>{" "}
-      <a href={demoMode ? "?demo=1" : window.location.pathname}>Clear</a>
+      <Link to="/">Clear</Link>
     </form>
   );
 }

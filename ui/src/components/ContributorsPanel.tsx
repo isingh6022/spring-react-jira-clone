@@ -1,5 +1,5 @@
+import { Link } from "react-router";
 import { useContributors } from "../hooks/useContributors";
-import { hrefWith } from "../utils/url";
 import ErrorMessage from "./ErrorMessage";
 import StateBadge from "./StateBadge";
 
@@ -34,7 +34,7 @@ function ContributorsPanel() {
                   ? "—"
                   : c.activeTasks.map((t) => (
                       <div key={t.id}>
-                        <a href={hrefWith({ task: String(t.id) })}>{t.title}</a>{" "}
+                        <Link to={`/tasks/${t.id}`}>{t.title}</Link>{" "}
                         <StateBadge state={t.state} />
                       </div>
                     ))}

@@ -1,19 +1,19 @@
+import { Link } from "react-router";
 import { useDemoMode } from "../hooks/useDemoMode";
 import { useExpertiseAreas } from "../hooks/useExpertiseAreas";
-import { hrefWith } from "../utils/url";
 import TaskForm from "./TaskForm";
 
-function CreateTaskDialog() {
+function CreateTaskPage() {
   const { data: expertiseAreas } = useExpertiseAreas();
   const demoMode = useDemoMode();
 
   return (
-    <dialog open>
+    <section>
       <h2>New task</h2>
       <TaskForm expertiseAreas={expertiseAreas} demoMode={demoMode} />
-      <a href={hrefWith({ new: null })}>Close</a>
-    </dialog>
+      <Link to="/">Back to tasks</Link>
+    </section>
   );
 }
 
-export default CreateTaskDialog;
+export default CreateTaskPage;

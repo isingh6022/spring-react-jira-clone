@@ -1,14 +1,15 @@
+import { Link, useParams } from "react-router";
 import { useContributors } from "../hooks/useContributors";
 import { useDemoMode } from "../hooks/useDemoMode";
 import { useTask } from "../hooks/useTask";
-import { hrefWith } from "../utils/url";
 import DemoActions from "./DemoActions";
 import ErrorMessage from "./ErrorMessage";
 import TaskActions from "./TaskActions";
 import TaskHistory from "./TaskHistory";
 import TaskSummary from "./TaskSummary";
 
-function TaskDetailPage({ id }: { id: number }) {
+function TaskDetailPage() {
+  const id = Number(useParams().id);
   const { data: task, loading, error } = useTask(id);
   const { data: contributors } = useContributors();
   const demoMode = useDemoMode();
@@ -28,7 +29,7 @@ function TaskDetailPage({ id }: { id: number }) {
       <h2>
         #{task.id} {task.title}
       </h2>
-      <a href={hrefWith({ task: null })}>Close</a>
+      <Link to="/">Back to tasks</Link>
 
       <TaskSummary task={task} />
 

@@ -1,15 +1,18 @@
-import { hrefWith } from "../utils/url";
+import { Link, NavLink } from "react-router";
 import DemoModeToggle from "./DemoModeToggle";
 
 function Header() {
   return (
     <header>
       <h1>
-        <a href={hrefWith({ task: null, new: null })}>Task routing</a>
+        <Link to="/">Task routing</Link>
       </h1>
       <nav>
-        <a href={hrefWith({ new: "1" })}>New task</a>{" "}
-        <DemoModeToggle />
+        <NavLink to="/" end>
+          Tasks
+        </NavLink>{" "}
+        <NavLink to="/contributors">Contributors</NavLink>{" "}
+        <NavLink to="/tasks/new">New task</NavLink> <DemoModeToggle />
       </nav>
     </header>
   );

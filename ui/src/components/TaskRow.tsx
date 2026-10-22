@@ -1,6 +1,6 @@
+import { Link } from "react-router";
 import type { Task } from "../api/tasks";
 import { PRIORITY_LABELS } from "../utils/labels";
-import { hrefWith } from "../utils/url";
 import ElapsedTime from "./ElapsedTime";
 import StateBadge from "./StateBadge";
 
@@ -9,7 +9,7 @@ function TaskRow({ task }: { task: Task }) {
     <tr data-state={task.state} data-priority={task.priority}>
       <td>{task.id}</td>
       <td>
-        <a href={hrefWith({ task: String(task.id) })}>{task.title}</a>
+        <Link to={`/tasks/${task.id}`}>{task.title}</Link>
         {task.demoNeverRoutes && <small> (demo: never routes)</small>}
       </td>
       <td>{PRIORITY_LABELS[task.priority]}</td>
