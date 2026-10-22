@@ -18,7 +18,7 @@ Requests to `/api/*` are forwarded to the backend by nginx in Docker (and by the
 | Backend | http://localhost:8080 |
 | Postgres | localhost:5432 (db/user/password: `jiraclone`) |
 
-Health check: `GET /api/health` returns `{"healthy": true, ...}`. The UI shows the result on its home page.
+The database is seeded with demo contributors and tasks (Flyway `V2__seed.sql`). Seed times are relative to when it first runs; `make db-reset` reseeds.
 
 ### Prerequisites
 

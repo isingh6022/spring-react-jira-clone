@@ -1,4 +1,5 @@
-import type { Contributor, ExpertiseArea } from "./contributors";
+import { post, request } from "./client";
+import type { Contributor, Expertise } from "./contributors";
 
 export type TaskState =
   | "ROUTING"
@@ -13,90 +14,70 @@ export type TaskState =
 
 export type TaskPriority = "LOW" | "MEDIUM" | "HIGH";
 
-export type OperatorAction = "EDIT" | "ASSIGN" | "REROUTE" | "CANCEL";
-
-// Demo mode only: the operator acts on behalf of the assigned contributor.
-export type ContributorAction =
+// ASSIGN, REROUTE and CANCEL are the operator's; the rest are demo-mode
+// actions the operator performs on behalf of the assignee.
+export type TaskAction =
+  | "ASSIGN"
+  | "REROUTE"
+  | "CANCEL"
   | "ACCEPT"
   | "DECLINE"
   | "START"
   | "COMPLETE"
   | "FAIL";
 
-export type TaskAction = OperatorAction | ContributorAction;
+export interface TaskEvent {
+  id: number;
+  at: string;
+  actor: string;
+  // The state the task moved to; null if unchanged.
+  state: TaskState | null;
+  message: string;
+}
 
 export interface Task {
   id: number;
   title: string;
-  description: string;
-  expertise: ExpertiseArea;
+  expertise: Expertise;
   priority: TaskPriority;
   state: TaskState;
   assignee: Contributor | null;
+  // Demo flag: automatic routing never returns for this task.
+  demoNeverRoutes: boolean;
   createdAt: string;
-  updatedAt: string;
   routingStartedAt: string | null;
-  // Sent back with every action; a stale version is rejected with 409.
-  version: number;
   // Computed by the server from the current state.
   allowedActions: TaskAction[];
-
-  // Demo flag: the autoroute won't route this task.
-  demoNeverRoutes: boolean;
-}
-
-export type ActorType = "SYSTEM" | "OPERATOR" | "CONTRIBUTOR";
-
-export interface TaskEvent {
-  id: number;
-  at: string;
-  type: string;
-  actorType: ActorType;
-  actorName: string | null;
-  fromState: TaskState | null;
-  toState: TaskState | null;
-  message: string;
-}
-
-export interface TaskDetail extends Task {
-  history: TaskEvent[];
-}
-
-export interface TaskFilters {
-  state?: TaskState;
-  contributorId?: number;
-  priority?: TaskPriority;
-  expertiseId?: number;
+  // Only included when fetching a single task.
+  history: TaskEvent[] | null;
 }
 
 export interface CreateTaskRequest {
   title: string;
-  description: string;
-  expertiseId: number;
+  expertise: Expertise;
   priority: TaskPriority;
   demoNeverRoutes: boolean;
 }
 
-export interface UpdateTaskRequest {
-  version: number;
-  title: string;
-  description: string;
-  expertiseId: number;
-  priority: TaskPriority;
-}
-
-export interface AssignTaskRequest {
-  version: number;
-  contributorId: number;
-}
-
-// Body for reroute, cancel, and the demo actions accept, decline, start and complete.
+// contributorId is needed for ASSIGN, reason for FAIL.
 export interface TaskActionRequest {
-  version: number;
+  action: TaskAction;
+  contributorId?: number;
   reason?: string;
 }
 
-// The operator reads in the fail reason in history before recovering.
-export interface FailTaskRequest extends TaskActionRequest {
-  reason: string;
+export function fetchTasks(state?: TaskState, signal?: AbortSignal) {
+  return request<Task[]>(state ? `/tasks?state=${state}` : "/tasks", { signal });
+}
+
+export function fetchTask(id: number, signal?: AbortSignal) {
+  return request<Task>(`/tasks/${id}`, { signal });
+}
+
+export function createTask(body: CreateTaskRequest) {
+  return post<Task>("/tasks", body);
+}
+
+export function runAction(id: number, body: TaskActionRequest) {
+  return post<Task>(`/tasks/${id}/actions`, body);
 }

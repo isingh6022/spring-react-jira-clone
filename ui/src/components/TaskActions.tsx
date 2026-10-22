@@ -1,37 +1,87 @@
-import type { ContributorDetail } from "../api/contributors";
-import type { OperatorAction, Task } from "../api/tasks";
-import { ACTION_LABELS } from "../utils/labels";
-import AssignContributor from "./AssignContributor";
-
-const BUTTON_ACTIONS: OperatorAction[] = ["EDIT", "REROUTE", "CANCEL"];
+import { useState } from "react";
+import { runAction, type Task } from "../api/tasks";
+import { useContributors } from "../hooks/useContributors";
+import type { RunTaskMutation } from "../hooks/useTaskMutation";
+import { ACTION_LABELS, EXPERTISE_LABELS } from "../utils/labels";
 
 function TaskActions({
   task,
-  contributors,
+  run,
+  pending,
 }: {
   task: Task;
-  contributors: ContributorDetail[];
+  run: RunTaskMutation;
+  pending: boolean;
 }) {
-  const allowed = BUTTON_ACTIONS.filter((a) => task.allowedActions.includes(a));
-  const canAssign = task.allowedActions.includes("ASSIGN");
+  const { data: contributors } = useContributors();
+  const [contributorId, setContributorId] = useState<number>();
+  const can = (a: Task["allowedActions"][number]) =>
+    task.allowedActions.includes(a);
+  // Only contributors with the task's expertise can be assigned.
+  const eligible = contributors.filter((c) => c.expertise === task.expertise);
 
-  if (allowed.length === 0 && !canAssign) {
+  if (!can("ASSIGN") && !can("REROUTE") && !can("CANCEL")) {
     return <p>No operator actions in this state.</p>;
   }
 
   return (
     <div>
-      {canAssign && (
+      {can("ASSIGN") && (
         <p>
-          <AssignContributor task={task} contributors={contributors} />
+          {eligible.length === 0 ? (
+            `No contributor has ${EXPERTISE_LABELS[task.expertise]} expertise.`
+          ) : (
+            <>
+              <select
+                value={contributorId ?? ""}
+                onChange={(e) =>
+                  setContributorId(Number(e.target.value) || undefined)
+                }
+              >
+                <option value="">Choose contributor…</option>
+                {eligible.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>{" "}
+              <button
+                type="button"
+                disabled={pending || !contributorId}
+                onClick={() =>
+                  run(() =>
+                    runAction(task.id, { action: "ASSIGN", contributorId }),
+                  )
+                }
+              >
+                {ACTION_LABELS.ASSIGN}
+              </button>
+            </>
+          )}
         </p>
       )}
       <p>
-        {allowed.map((a) => (
-          <button key={a} type="button">
-            {ACTION_LABELS[a]}
+        {can("REROUTE") && (
+          <button
+            type="button"
+            disabled={pending}
+            onClick={() => run(() => runAction(task.id, { action: "REROUTE" }))}
+          >
+            {ACTION_LABELS.REROUTE}
           </button>
-        ))}
+        )}
+        {can("CANCEL") && (
+          <button
+            type="button"
+            disabled={pending}
+            onClick={() =>
+              window.confirm("Cancel this task? This cannot be undone.") &&
+              run(() => runAction(task.id, { action: "CANCEL" }))
+            }
+          >
+            {ACTION_LABELS.CANCEL}
+          </button>
+        )}
       </p>
     </div>
   );

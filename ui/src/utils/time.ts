@@ -1,20 +1,15 @@
 export function formatElapsed(ms: number): string {
-  const totalSeconds = Math.max(0, Math.floor(ms / 1000));
-  const days = Math.floor(totalSeconds / 86400);
-  const hours = Math.floor((totalSeconds % 86400) / 3600);
-  const minutes = Math.floor((totalSeconds % 3600) / 60);
-  const seconds = totalSeconds % 60;
-
-  if (days > 0) {
-    return `${days}d ${hours}h`;
+  const s = Math.max(0, Math.floor(ms / 1000));
+  if (s >= 86400) {
+    return `${Math.floor(s / 86400)}d ${Math.floor((s % 86400) / 3600)}h`;
   }
-  if (hours > 0) {
-    return `${hours}h ${minutes}m`;
+  if (s >= 3600) {
+    return `${Math.floor(s / 3600)}h ${Math.floor((s % 3600) / 60)}m`;
   }
-  if (minutes > 0) {
-    return `${minutes}m ${String(seconds).padStart(2, "0")}s`;
+  if (s >= 60) {
+    return `${Math.floor(s / 60)}m ${String(s % 60).padStart(2, "0")}s`;
   }
-  return `${seconds}s`;
+  return `${s}s`;
 }
 
 export function formatDateTime(iso: string): string {

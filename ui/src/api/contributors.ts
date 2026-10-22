@@ -1,22 +1,18 @@
-import type { TaskState } from "./tasks";
+import { request } from "./client";
 
-export interface ExpertiseArea {
-  id: number;
-  name: string;
-}
+export type Expertise =
+  | "FINANCE"
+  | "HEALTHCARE"
+  | "DATA_ANALYSIS"
+  | "OPERATIONS"
+  | "LEGAL";
 
 export interface Contributor {
   id: number;
   name: string;
+  expertise: Expertise;
 }
 
-export interface ContributorTaskRef {
-  id: number;
-  title: string;
-  state: TaskState;
-}
-
-export interface ContributorDetail extends Contributor {
-  expertise: ExpertiseArea[];
-  activeTasks: ContributorTaskRef[];
+export function fetchContributors(signal?: AbortSignal) {
+  return request<Contributor[]>("/contributors", { signal });
 }

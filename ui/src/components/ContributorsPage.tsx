@@ -1,9 +1,8 @@
-import { Link } from "react-router";
 import { useContributors } from "../hooks/useContributors";
+import { EXPERTISE_LABELS } from "../utils/labels";
 import ErrorMessage from "./ErrorMessage";
-import StateBadge from "./StateBadge";
 
-function ContributorsPanel() {
+function ContributorsPage() {
   const { data: contributors, loading, error } = useContributors();
 
   if (loading) {
@@ -21,24 +20,13 @@ function ContributorsPanel() {
           <tr>
             <th>Name</th>
             <th>Expertise</th>
-            <th>Active tasks</th>
           </tr>
         </thead>
         <tbody>
           {contributors.map((c) => (
             <tr key={c.id}>
               <td>{c.name}</td>
-              <td>{c.expertise.map((a) => a.name).join(", ")}</td>
-              <td>
-                {c.activeTasks.length === 0
-                  ? "—"
-                  : c.activeTasks.map((t) => (
-                      <div key={t.id}>
-                        <Link to={`/tasks/${t.id}`}>{t.title}</Link>{" "}
-                        <StateBadge state={t.state} />
-                      </div>
-                    ))}
-              </td>
+              <td>{EXPERTISE_LABELS[c.expertise]}</td>
             </tr>
           ))}
         </tbody>
@@ -47,4 +35,4 @@ function ContributorsPanel() {
   );
 }
 
-export default ContributorsPanel;
+export default ContributorsPage;

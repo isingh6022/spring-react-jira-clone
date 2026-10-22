@@ -1,6 +1,8 @@
-import { contributors } from "../api/mockData";
+import { fetchContributors, type Contributor } from "../api/contributors";
+import { useFetch } from "./useFetch";
 
-// Mock implementation. Will call GET /api/contributors later.
+const NO_CONTRIBUTORS: Contributor[] = [];
+
 export function useContributors() {
-  return { data: contributors, loading: false, error: null as string | null };
+  return useFetch(fetchContributors, NO_CONTRIBUTORS);
 }

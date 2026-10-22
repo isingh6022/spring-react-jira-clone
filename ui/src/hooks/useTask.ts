@@ -1,13 +1,12 @@
-import { useMemo } from "react";
-import { tasks } from "../api/mockData";
-import type { TaskDetail } from "../api/tasks";
+import { useCallback } from "react";
+import { fetchTask, type Task } from "../api/tasks";
+import { useFetch } from "./useFetch";
 
-// Mock implementation. Will call GET /api/tasks/:id later.
 export function useTask(id: number) {
-  const data = useMemo<TaskDetail | null>(
-    () => tasks.find((t) => t.id === id) ?? null,
+  const load = useCallback(
+    (signal: AbortSignal) => fetchTask(id, signal),
     [id],
   );
 
-  return { data, loading: false, error: null as string | null };
+  return useFetch<Task | null>(load, null);
 }

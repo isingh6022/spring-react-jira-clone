@@ -46,32 +46,10 @@ main > section {
   padding: 1.25rem 1.5rem;
 }
 
-footer {
-  max-width: 1200px;
-  margin: 0 auto 1.5rem;
-  padding: 0 1.5rem;
-  color: var(--muted);
-  font-size: 0.85rem;
-}
-
-footer pre {
-  margin: 0;
-}
-
 /* ---------- Forms ---------- */
 
 form {
   margin-bottom: 1rem;
-}
-
-/* Filter bar on the task list */
-main > section > form {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5rem 1rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid var(--border);
 }
 
 form p {
@@ -227,8 +205,7 @@ p[role="alert"] {
 
 @media (max-width: 640px) {
   header,
-  main,
-  footer {
+  main {
     padding-left: 1rem;
     padding-right: 1rem;
   }

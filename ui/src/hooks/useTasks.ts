@@ -1,21 +1,14 @@
-import { useMemo } from "react";
-import { tasks } from "../api/mockData";
-import type { Task, TaskFilters } from "../api/tasks";
+import { useCallback } from "react";
+import { fetchTasks, type Task, type TaskState } from "../api/tasks";
+import { useFetch } from "./useFetch";
 
-// Mock implementation: filters the mock data. Will call GET /api/tasks later.
-export function useTasks(filters: TaskFilters) {
-  const data = useMemo<Task[]>(
-    () =>
-      tasks.filter(
-        (t) =>
-          (!filters.state || t.state === filters.state) &&
-          (!filters.contributorId ||
-            t.assignee?.id === filters.contributorId) &&
-          (!filters.priority || t.priority === filters.priority) &&
-          (!filters.expertiseId || t.expertise.id === filters.expertiseId),
-      ),
-    [filters],
+const NO_TASKS: Task[] = [];
+
+export function useTasks(state?: TaskState) {
+  const load = useCallback(
+    (signal: AbortSignal) => fetchTasks(state, signal),
+    [state],
   );
 
-  return { data, loading: false, error: null as string | null };
+  return useFetch(load, NO_TASKS);
 }
