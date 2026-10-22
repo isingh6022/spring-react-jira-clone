@@ -63,7 +63,7 @@ export interface TaskDetail extends Task {
 }
 
 export interface TaskFilters {
-  state?: TaskState[];
+  state?: TaskState;
   contributorId?: number;
   priority?: TaskPriority;
   expertiseId?: number;
