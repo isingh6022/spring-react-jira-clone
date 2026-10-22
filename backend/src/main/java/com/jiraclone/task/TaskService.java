@@ -5,6 +5,7 @@ import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import org.springframework.context.ApplicationEventPublisher;
@@ -112,7 +113,9 @@ public class TaskService {
 	// Records the request and hands it to the engine once the transaction commits.
 	private void startRouting(Task task, String message) {
 		task.setAssignee(null);
-		task.setRoutingStartedAt(Instant.now());
+		// Postgres keeps microseconds; truncating keeps this equal to the stored value,
+		// which is how the engine recognises its own request.
+		task.setRoutingStartedAt(Instant.now().truncatedTo(ChronoUnit.MICROS));
 		task.record(OPERATOR, TaskState.ROUTING, message);
 		publisher.publishEvent(new RoutingRequested(task.getId(), task.getRoutingStartedAt()));
 	}

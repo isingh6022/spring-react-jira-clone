@@ -118,6 +118,10 @@ public class Task {
 		this.routingStartedAt = routingStartedAt;
 	}
 
+	public long getVersion() {
+		return version;
+	}
+
 	public List<TaskEvent> getHistory() {
 		return history;
 	}
